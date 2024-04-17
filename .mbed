@@ -1,0 +1,5 @@
+ROOT=.
+DEVICE_ID[/home/studio/workspace/DaveTek_Code]=ZQIEKNOHDJMtePPu
+DEVICE_TYPE[/home/studio/workspace/DaveTek_Code]=connected
+TARGET=NUCLEO_G071RB
+TARGET_CODE=0729
