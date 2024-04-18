@@ -22,6 +22,8 @@ class Scene {
         void NewText(LCD1602 lcd,  const char *text, int column, int row);
         void NewButton(LCD1602 lcd, int nextScene, const char* buttonText, int column, int row);
 
+        void ClearScene(LCD1602 lcd);
+
         void DisplayScene(LCD1602 lcd);
         void ChangeScene(Button button);
 
