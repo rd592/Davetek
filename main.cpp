@@ -56,41 +56,47 @@ void buttonThreadFn(){
 }
 
 int main(){
+
+//example code 
+
+    /*
+
     lcd.init();
     buttonThread.start(buttonThreadFn);
 
-    NewScene(0);  //default scene
-    NewScene(1);
-    NewScene(2);
-    NewScene(3);
-    
-    NewButton(0, 1, "Scene 1?", 0, 0);
-    NewButton(0, 2, "Scene 2?", 0, 1);
-
-    NewText(1, "Scene1", 0,0);
-    NewText(2, "Scene2", 0,0);
-
-    sceneManager.DisplaySceneByID(0);
-
-    Scene & defaultScene = sceneManager.sceneArray[0];
-
-    while(true){
-
-        if(!button){
-            for(int i = 0; i < defaultScene.buttonNum; i++){
-            Button & button = defaultScene._buttonArray[i];
-            button._rowLoc--;
-            }
-            sceneManager.DisplaySceneByID(0);
-            thread_sleep_for(400);
-        }
-
-        if(button2){
-            Button curButton = defaultScene.GetButton(0);
-            printf("hello %d", curButton.GetNextScene());
-            sceneManager.DisplaySceneByID(curButton.GetNextScene());
+@ -92,5 +97,36 @@ int main(){
             thread_sleep_for(400);
         }
     }
-}
+    */
+//
 
+    lcd.init();
+    //buttonThread.start(buttonThreadFn);
+    NewScene(0);
+    NewButton(0, 1, "", 0, 0);
+
+    Scene & baseScene = sceneManager.sceneArray[0];
+
+
+    while(true){
+        srand((unsigned)time(NULL));
+        int random = rand() %4;
+        baseScene.ClearScene(lcd);
+        printf("%d", random);
+        switch(random){      
+            case 0: 
+            NewText(0, "X", 0, 0);
+            case 1:
+            NewText(0, "X", 15, 0);
+            case 3:
+            NewText(0, "X", 0, 1);
+            case 4:
+            NewText(0, "X", 15, 1);
+            
+        }
+        thread_sleep_for(1000);
+
+    }
+
+}
