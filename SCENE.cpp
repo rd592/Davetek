@@ -40,6 +40,18 @@
         textNum++;
     }
 
+    void Scene :: ClearScene(LCD1602 lcd){
+        for(int i = 0; i < textNum; i++){
+            _textArray[i] = Button();
+        }
+        for(int i = 0; i < buttonNum; i++){
+            _buttonArray[i] = Button();
+        }
+        buttonNum = 0;
+        textNum = 0;
+        DisplayScene(lcd);
+    }
+
     void Scene :: DisplayScene(LCD1602 lcd){
 
         lcd.clear();
