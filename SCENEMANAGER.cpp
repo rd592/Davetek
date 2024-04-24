@@ -25,3 +25,8 @@ void SceneManager :: NewText(int sceneID, const char *text, int column, int row)
     Scene & curScene = sceneArray[sceneID];
     curScene.NewText(_lcd, text, column, row);
 }
+
+void SceneManager :: NewChar(int sceneID, const int *customChar, int column, int row){
+    Scene & curScene = sceneArray[sceneID];
+    curScene.NewChar(_lcd, customChar, column, row);
+}
