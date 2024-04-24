@@ -13,11 +13,13 @@ class Button{
 
     public:
     const char *_buttonText; //text displayed by button.
+    const int *_customChar; //stores custom char if there is one
     int _columnLoc; //button location
     int _rowLoc;
 
     Button();
     Button(LCD1602 lcd, const char* buttonText, int columnLoc, int rowLoc);//text
+    Button(LCD1602 lcd, const int *customChar, int columnLoc, int rowLoc);//custom characters. Due to laziness this will load the text instantly.
     Button(LCD1602 lcd, int nextScene, const char* buttonText, int columnLoc, int rowLoc);//button
     const char *GetText();
 
