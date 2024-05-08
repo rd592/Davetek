@@ -38,4 +38,5 @@ public:
     void writeChar(int data);
     void loadCustomChar(int index, const int* pattern);
     void writeCustomChar(int index);
+    void toggleBackLight(bool value);
 };
