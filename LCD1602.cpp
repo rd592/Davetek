@@ -159,3 +159,7 @@ void LCD1602::clear() {
     wait_us(1640);      // Wait for the display (1.64 ms)
     setCursor(0, 0);    // Reset the cursor position
 }
+
+void LCD1602::toggleBackLight(bool value){
+    _backlight = value;
+}
