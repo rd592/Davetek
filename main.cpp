@@ -19,9 +19,9 @@ const int filledSquare[8] = { // Custom characters are stored as bit patterns (5
     0b11111
 };
 
-LCD1602 lcd(A1, A0, A2, A3, D4, D5, D6, D7);
+LCD1602 lcd(A1, A0, D1, A3, D4, D5, D6, D7);
 SceneManager sceneManager(lcd);
-
+//DigitalOut backlight(A2);//controls backlight
 
 
 DigitalIn B1(D9, PullUp); //left most button
@@ -361,6 +361,7 @@ void quickDrawSinglePlayerGame(Scene &quickDrawScene){
     while(gameOver == false){
         //Use a for loop to determine the amount of rounds
         for(int i = 0; i < lengthOfGame; i++){
+            lcd.toggleBackLight(0);//0 is on 1 is off
 
             //Display what round it is and give a prompt to the user that it is starting
             quickDrawScene.ClearScene(lcd);
@@ -368,8 +369,9 @@ void quickDrawSinglePlayerGame(Scene &quickDrawScene){
             p = sprintf(buffer, "ROUND: %d ", i+1);
             NewText(1, buffer, 0, 0);   
             sceneManager.DisplaySceneByID(1);
-            thread_sleep_for(500);
+            thread_sleep_for(1000);
             quickDrawScene.ClearScene(lcd);
+            lcd.toggleBackLight(0);//0 is on 1 is off
 
             //Generate a random amount of time in milliseconds (not microseconds)
             randLIB_seed_random();
@@ -379,6 +381,7 @@ void quickDrawSinglePlayerGame(Scene &quickDrawScene){
             while(timer.elapsed() < react && roundOver == false){
                 if(!B1 || !B2 || !B3 || !B4){
                     timer.stop();
+                    lcd.toggleBackLight(0);//0 is on 1 is off
                     NewText(1, "TOO EARLY", 0, 0);
                     sceneManager.DisplaySceneByID(1);
                     thread_sleep_for(1000);
@@ -390,6 +393,7 @@ void quickDrawSinglePlayerGame(Scene &quickDrawScene){
             }
 
             if(roundOver == false){
+                lcd.toggleBackLight(1);//0 is on 1 is off
                 NewText(1, "REACT" , 0, 0); //Use backlight here
                 sceneManager.DisplaySceneByID(1);
             }
@@ -397,6 +401,7 @@ void quickDrawSinglePlayerGame(Scene &quickDrawScene){
             while(timer.elapsed() >= react && timer.elapsed() < 5000 && roundOver == false){
                 if(!B1 || !B2 || !B3 || !B4){
                     timer.stop();
+                    lcd.toggleBackLight(0);//0 is on 1 is off
                     quickDrawScene.ClearScene(lcd);
                     p = sprintf(buffer, "REACTION TIME:   %dms ", timer.elapsed() - react);
                     NewText(1, buffer, 0, 0);   
@@ -410,6 +415,7 @@ void quickDrawSinglePlayerGame(Scene &quickDrawScene){
             }
             if(timer.elapsed() >= 5000){
                 timer.stop();
+                lcd.toggleBackLight(0);//0 is on 1 is off
                 NewText(1, "TOO LATE", 0, 0); //fix
                 sceneManager.DisplaySceneByID(1);
                 thread_sleep_for(1000);
@@ -696,7 +702,6 @@ int main(){
 lcd.init(); //initialise LCD 
     NewScene(0);
     sceneManager.DisplaySceneByID(0);
-
 
     Scene & baseScene = sceneManager.sceneArray[0]; //reference to scene being used
 
