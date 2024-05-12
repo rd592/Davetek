@@ -30,3 +30,17 @@ void SceneManager :: NewChar(int sceneID, const int *customChar, int column, int
     Scene & curScene = sceneArray[sceneID];
     curScene.NewChar(_lcd, customChar, column, row);
 }
+
+void SceneManager :: ClearAll(){
+    for(int i = 0; i <sceneNum; i++){
+        sceneArray[i].ClearScene(_lcd);
+        sceneArray[i].ClearChar(_lcd);
+
+    }
+}
+void SceneManager :: ClearChars(){
+    for(int i = 0; i <sceneNum; i++){
+        sceneArray[i].ClearChar(_lcd);
+
+    }
+}
