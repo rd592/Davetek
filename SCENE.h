@@ -10,12 +10,6 @@ class Scene {
     public:
     int _sceneID;
     bool active;
-
-    /*
-        Button _buttonArray[10];//tracks the buttons in a scene
-        Button _textArray[10];
-        Button _charArray[16];//custom chars
-    */
     
         vector<Button> _buttonArray;
         vector<Button> _textArray;
@@ -35,10 +29,11 @@ class Scene {
         void NewButton(LCD1602 lcd, int nextScene, const char* buttonText, int column, int row);
 
         void ClearScene(LCD1602 lcd);
+        void ClearChar(LCD1602 lcd);
 
         void DisplayScene(LCD1602 lcd);
         void ChangeScene(Button button);
 
-        Button GetButton(int row);
+        Button GetText(int column, int row);
         
 };
