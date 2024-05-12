@@ -11,7 +11,7 @@ class SceneManager{
 public:
 //number of scenes is capped at 50 right now. making the array too large overlaps with other memory addresses. 
 //I dont know how to fix this right now.
-    Scene sceneArray[20];
+    Scene sceneArray[8];
     int sceneNum = 0;
 
     SceneManager(LCD1602 lcd);
@@ -22,7 +22,10 @@ public:
     void NewText(int sceneID, const char *text, int column, int row);
     void NewChar(int sceneID, const int *customChar, int column, int row); //custom char
 
-    void DisplaySceneByID(int ID);
+    void ClearAll();
+    void ClearChars();
+
+    void DisplaySceneByID(int ID);  
     //Scene GetScene();
 
 
