@@ -9,18 +9,6 @@
     Scene :: Scene(){
     }
 
-//row is the the row of the lcd to check for a button in
-    Button Scene :: GetButton(int row){
-
-        for(int i = 0; i < buttonNum; i++){
-            if(_buttonArray[i]._rowLoc == row){
-                return _buttonArray.at(i);
-            }
-
-        }
-        return _buttonArray.at(0);
-    }
-
     //used to make a button in the menu. make sure text is shorter than 16 letters
     void Scene::NewButton(LCD1602 lcd, int nextScene, const char* buttonText, int column, int row){
 
@@ -45,6 +33,12 @@
 
         _charArray.push_back(newText);
         charNum++;
+    }
+
+    void Scene :: ClearChar(LCD1602 lcd){
+        
+        _charArray.clear();
+        charNum = 0;
     }
 
     void Scene :: ClearScene(LCD1602 lcd){
@@ -113,4 +107,14 @@
             }    
         }  
     }
+}
+
+
+Button Scene :: GetText(int column, int row){
+    for(int i = 0; i<textNum;i++){
+        if(_textArray[i]._columnLoc == column && _textArray[i]._rowLoc == row){
+            return _textArray[i];
+        }
+    }
+    return _textArray[0];
 }
