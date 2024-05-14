@@ -757,11 +757,6 @@ void quickDrawMultiplayerGameGuest(Scene &quickDrawScene){
     }
 }
 
-
-vector<float> testList = {329,293,261,293,329,329,329,0.1,293,293,293,0.1,329,392,392};
-vector<char>testList2 = {'E','D','C','D','E','E','E','X','D','D','D','X','E','G','G','X'};
-
-
 void NoteGrid(Scene &sequenceScene, LCD1602 lcd);//allows note grid to be called in menu loop
 //contains the options to play song or write song
 void MenuLoop(Scene &sequenceScene, LCD1602 lcd){
@@ -794,7 +789,7 @@ void MenuLoop(Scene &sequenceScene, LCD1602 lcd){
 //B1 = scroll left
 //B2 = scroll right
 //B3 = change note up
-//B4 = play song
+//B4 = go back
 void NoteGrid(Scene &sequenceScene, LCD1602 lcd){
 
     int sceneID = sequenceScene._sceneID;
@@ -810,8 +805,16 @@ void NoteGrid(Scene &sequenceScene, LCD1602 lcd){
 
     char full[33] = {
             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  
-            };
+    };
 
+    //replaces full with values from sequenceList if a song has been written already. 
+    if(songWritten){
+        for(int i = 0; i< 32; i++){
+            full[i] = sequenceList.at(i);
+        }
+    }    
+    
+    //display note grid
     NewText(sceneID, full, 0, 0);
     sceneManager.DisplaySceneByID(sceneID);
     thread_sleep_for(1000);
@@ -849,18 +852,21 @@ void NoteGrid(Scene &sequenceScene, LCD1602 lcd){
         }
 
         else if(!B3){
+            char temp;
             //logic for changing note up
             char curNote = sequenceList.at((currentRow*16) + currentCol);
-            char temp;
+
+            //compare to all available notes in noteArray until same one is found
             for(int i = 0; i< 8; i++){
                 if(speaker.noteArray[i] == curNote){
+                    //if at end of noteArray, loop around
                     if(i == 7){
                         temp = speaker.noteArray[0]; //reset to 1st position if greater than 6
-                        sequenceList.at((currentRow*16) + currentCol) = temp;
+                        sequenceList.at((currentRow*16) + currentCol) = temp;//replaces with new value
                     }
                     else{
                         temp = speaker.noteArray[i+1]; //gets the note in the array above curNote
-                        sequenceList.at((currentRow*16) + currentCol) = temp;
+                        sequenceList.at((currentRow*16) + currentCol) = temp;  
                     }             
                 }   
             }
@@ -872,6 +878,7 @@ void NoteGrid(Scene &sequenceScene, LCD1602 lcd){
             };
             int counter = 0;
 
+            //used to print out all new values.
             for(int j = 0; j < 32; j++){
                 char temp = sequenceList[j];
                 sequenceChar[j] = temp;      
@@ -881,13 +888,14 @@ void NoteGrid(Scene &sequenceScene, LCD1602 lcd){
             sceneManager.ClearAll();
             
             NewText(sceneID, sequenceChar, 0, 0);
-            //printf("CNNEFOEINFEFNEFN");
 
             sceneManager.DisplaySceneByID(sceneID);
             thread_sleep_for(200);
+            //gap to show what the new note is
             NewCustomChar(sceneID, filledSquare, currentCol, currentRow);
             sceneManager.DisplaySceneByID(sceneID);
         }
+        // go back to sequence menu
         else if(!B4){
             thread_sleep_for(1000);
             MenuLoop(sequenceScene, lcd);
@@ -897,6 +905,7 @@ void NoteGrid(Scene &sequenceScene, LCD1602 lcd){
 
 }
 
+//this function starts sequence-x. Only displays some basic info and starts menLoop
 void SequenceLoop(Scene &sequenceScene){
     sceneManager.ClearAll();
     int sceneID = sequenceScene._sceneID;
@@ -913,33 +922,36 @@ void SequenceLoop(Scene &sequenceScene){
         NewText(sceneID, "B4 = GO BACK", 0, 1);
         sceneManager.DisplaySceneByID(sceneID);
         thread_sleep_for(3000);
-        while(true){
-            MenuLoop(sequenceScene, lcd);
-        }
+        
+        MenuLoop(sequenceScene, lcd);
+        
     }
 }
 
-
+//this function displays the main menu for all games
 void MainMenuLoop(Scene &menuScene){
-    sceneManager.ClearAll();
+    sceneManager.ClearAll(); //clear any scenes
 
-    int sceneID = menuScene._sceneID;
-    int count = 500;
-    bool screen = 0;
+    int sceneID = menuScene._sceneID; //ref to the main menu scene
+    int count = 500;//after 5s, switch menu screen
+    bool screen = 0;//controls whether first or second menu screen shown
     while(true){
         
 
         while(true){
 
+            //if 5 seconds passed, switch to other screen.
             if(count >500 && screen == 0){
                 screen = 1;
                 count = 0;
                 sceneManager.ClearAll();
+                //displays options for quick draw and dave says
                 NewText(sceneID, "B1 = QUICK DRAW", 0, 0);
                 NewText(sceneID, "B2 = DAVE SAYS", 0, 1);
                 sceneManager.DisplaySceneByID(sceneID);
 
             }
+            //switches screen back
             else if(count > 500 && screen == 1){
                 screen = 0;
                 count = 0;
@@ -948,12 +960,13 @@ void MainMenuLoop(Scene &menuScene){
                 sceneManager.DisplaySceneByID(sceneID);
 
             }
-
+            //starts quick draw if button 1 pressed
             if(!B1){
                 thread_sleep_for(100);
                 sceneManager.ClearAll();
                 quickDrawSinglePlayerGame(quickDrawScene);
             }
+            //starts dave says if button 2 pressed
             else if(!B2){
                 thread_sleep_for(100);
                 sceneManager.ClearAll();
@@ -963,6 +976,7 @@ void MainMenuLoop(Scene &menuScene){
                 thread_sleep_for(2000);
                 DaveSaysLoop(daveScene);
             }
+            //starts sequence x if button 3 pressed
             else if(!B3){
                 thread_sleep_for(100);
                 SequenceLoop(sequenceScene);
@@ -1000,9 +1014,10 @@ int main(){
 
     menuScene.ClearScene(lcd);
     daveScene.ClearScene(lcd);
-    NewText(0, "DAVETEK LTD", 0, 0);
+
+    NewText(0, "DAVETEK LTD", 0, 0); //opening screen
     sceneManager.DisplaySceneByID(0);
     thread_sleep_for(2000);
-    MainMenuLoop(menuScene);
+    MainMenuLoop(menuScene); //start main menu function
 
 }
